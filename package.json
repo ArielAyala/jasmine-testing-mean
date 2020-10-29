@@ -6,6 +6,7 @@
     "start": "ng build && node ./server/bin/www",
     "build": "ng build",
     "test": "ng test",
+    "test:server": "node ./node_modules/jasmine/bin/jasmine.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
