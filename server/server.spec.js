@@ -55,7 +55,7 @@ describe("Testing Router", () => {
   });
 
   describe("POST", () => {
-    it("200", (done) => {
+    it("200", done => {
       const post = [
         {
           title: "Platzi",
@@ -94,6 +94,26 @@ describe("Testing Router", () => {
           assets,
         })
         .then((res) => {
+          expect(res.status).toBe(200);
+          done();
+        });
+    });
+
+    it("200 PDF", done => {
+      spyOn(Pins, "create").and.callFake((pins, callback) => {
+        callback(false, {});
+      });
+
+      const assets = [{ url: 'http://platzi.pdf' }];
+
+      axios
+        .post("http://localhost:3000/api", {
+          title: "title",
+          author: "author",
+          description: "description",
+          assets,
+        })
+        .then(res => {
           expect(res.status).toBe(200);
           done();
         });
