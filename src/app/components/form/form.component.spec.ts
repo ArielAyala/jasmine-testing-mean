@@ -1,16 +1,48 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatSnackBar } from "@angular/material";
+import { of } from "rxjs";
+import { NavigationService } from "src/app/services/navigation.service";
+import { RepositoryService } from "src/app/services/repository.service";
 
-import { FormComponent } from './form.component';
+import { FormComponent } from "./form.component";
 
-describe('FormComponent', () => {
+class RepositoryServiceStub {
+  savePins() {
+    return of(true);
+  }
+}
+
+class NavigationServiceStub {
+  goToPins() {}
+}
+
+class MatSnackBarStub {
+  open() {
+    return {
+      afterDismissed: () => {
+        return of(true);
+      },
+    };
+  }
+}
+
+fdescribe("FormComponent", () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormComponent ]
-    })
-    .compileComponents();
+      declarations: [FormComponent],
+      providers: [
+        { provide: RepositoryService, useClass: RepositoryServiceStub },
+        { provide: NavigationService, useClass: NavigationServiceStub },
+        { provide: MatSnackBar, useClass: MatSnackBarStub },
+      ],
+      schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA],
+      imports: [ReactiveFormsModule],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +51,7 @@ describe('FormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
