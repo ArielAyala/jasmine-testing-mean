@@ -6,6 +6,7 @@ import {
 
 import { ApiService } from "./api.service";
 import { environment } from "src/environments/environment";
+import { HttpHeaders } from "@angular/common/http";
 
 fdescribe("ApiService", () => {
   let service: ApiService;
@@ -44,6 +45,33 @@ fdescribe("ApiService", () => {
 
       const req = httpMock.expectOne(environment.apiEndpoint + "/test");
       expect(req.request.method).toBe("GET");
+      req.flush(result);
+    });
+
+    it("Should execute GET with headers", () => {
+      const result = "testing";
+      const headers = new HttpHeaders().set("platzi-headers", "ariel-rules");
+
+      service.get("/test", headers).subscribe((response) => {
+        expect(response).toBe(result);
+      });
+
+      const req = httpMock.expectOne(environment.apiEndpoint + "/test");
+      expect(req.request.headers.get("platzi-headers")).toBe("ariel-rules");
+      expect(req.request.method).toBe("GET");
+      req.flush(result);
+    });
+  });
+
+  describe("POST", () => {
+    it("Should execute POST", () => {
+      const result = "testing";
+      service.post("/test", {}).subscribe((response) => {
+        expect(response).toBe(result);
+      });
+
+      const req = httpMock.expectOne(environment.apiEndpoint + "/test");
+      expect(req.request.method).toBe("POST");
       req.flush(result);
     });
   });
